@@ -1,0 +1,92 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto mt-10">
+  <div class="bg-white rounded-xl shadow-md p-8">
+    <div class="text-center">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-neutral-900 mb-2">Color Blindness Test</h2>
+        <div class="flex items-center justify-center text-neutral-600">
+          <i class="fas fa-clipboard-list mr-2"></i>
+          <span>Question {{ current_q }} of {{ total }}</span>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="mb-8">
+        <div class="relative pt-1">
+          <div class="flex mb-2 items-center justify-between">
+            <div>
+              <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-primary-600 bg-primary-200">
+                Progress
+              </span>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-semibold inline-block text-primary-600">
+                {{ current_q }}/{{ total }}
+              </span>
+            </div>
+          </div>
+          <div class="overflow-hidden h-3 mb-4 text-xs flex rounded bg-primary-200">
+            <div style="width:{{ progress }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary-500"></div>
+
+          </div>
+        </div>
+      </div>
+
+      {% if question %}
+        <div class="mb-8">
+          <div class="bg-gradient-to-br from-neutral-50 to-primary-50 rounded-xl p-4 border border-neutral-200 shadow-inner">
+            <img src="{{ question.image.url }}" alt="Test Image" class="mx-auto my-4 max-w-full h-64 object-contain rounded-lg">
+          </div>
+          <p class="text-sm text-neutral-600 mt-2">Enter the number you see in the image above</p>
+        </div>
+        
+        <form method="post" class="mt-6">
+          {% csrf_token %}
+          <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <div class="relative">
+              <input type="text" name="answer" placeholder="Enter number" 
+                     class="border-2 border-neutral-200 rounded-lg px-4 py-3 w-48 text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                     required>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-hashtag text-neutral-400"></i>
+              </div>
+            </div>
+            <button type="submit" 
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300">
+              <i class="fas fa-arrow-right mr-2"></i>
+              <span>Submit Answer</span>
+            </button>
+          </div>
+        </form>
+      {% else %}
+        <div class="bg-gradient-to-br from-white to-primary-50 rounded-xl shadow-sm p-12 text-center border border-primary-100">
+          <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 mb-4">
+            <i class="fas fa-exclamation-circle text-primary-600 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-neutral-900 mb-2">No Questions Available</h3>
+          <p class="text-neutral-600 mb-6">There are currently no test questions available. Please try again later or contact support.</p>
+          <a href="{% url 'dashboard' %}" class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300">
+            <i class="fas fa-home mr-2"></i>
+            <span>Back to Dashboard</span>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  <!-- Instructions Section -->
+  <div class="bg-white rounded-xl shadow-md p-6 mt-6">
+    <h3 class="text-lg font-semibold text-neutral-900 mb-3 flex items-center">
+      <i class="fas fa-info-circle text-primary-600 mr-2"></i>
+      Test Instructions
+    </h3>
+    <div class="text-sm text-neutral-600 space-y-2">
+      <p>1. Look at each image carefully and identify the number you see.</p>
+      <p>2. Enter the number in the input field and click "Submit Answer".</p>
+      <p>3. Complete all questions to get your color vision assessment.</p>
+      <p>4. If you cannot see any number, enter "0" or leave it blank.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

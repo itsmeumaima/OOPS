@@ -1,0 +1,33 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto mt-10">
+  <div class="bg-white rounded-xl shadow-md p-8">
+    <div class="text-center">
+      <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-br from-green-100 to-green-200 mb-4">
+        <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-neutral-900 mb-6">Test Completed</h2>
+      
+      <div class="space-y-4 mb-8">
+        <div class="flex justify-between items-center py-3 border-b border-neutral-100">
+          <span class="text-neutral-600">Score</span>
+          <span class="font-semibold text-lg">{{ score }} / {{ total }}</span>
+        </div>
+        <div class="flex justify-between items-center py-3 border-b border-neutral-100">
+          <span class="text-neutral-600">Percentage</span>
+          <span class="font-semibold text-lg">{{ percentage|floatformat:2 }}%</span>
+        </div>
+        <div class="flex justify-between items-center py-3 border-b border-neutral-100">
+          <span class="text-neutral-600">Diagnosis</span>
+          <span class="font-semibold text-lg">{{ diagnosis }}</span>
+        </div>
+      </div>
+      
+      <a href="{% url 'color_test' %}" class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300">
+        <i class="fas fa-redo mr-2"></i>
+        <span>Retake Test</span>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

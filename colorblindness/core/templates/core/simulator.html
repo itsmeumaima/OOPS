@@ -1,0 +1,151 @@
+{% extends "core/base.html" %}
+
+{% block title %}Color Blindness Simulator - Vision Accessibility Tools{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <!-- Main Card -->
+  <div class="bg-white rounded-xl shadow-md overflow-hidden">
+    <!-- Header with Back Button -->
+    <div class="flex items-center justify-between p-6 border-b border-neutral-200">
+      <a href="{% url 'dashboard' %}" class="inline-flex items-center text-neutral-600 hover:text-primary-600 transition-colors duration-300">
+        <i class="fas fa-arrow-left mr-2"></i>
+        <span class="font-medium">Back to Dashboard</span>
+      </a>
+      
+      <h2 class="text-2xl font-bold text-neutral-900 flex items-center gap-2">
+        <i class="fas fa-eye text-primary-600"></i>
+        Color Blindness Simulator
+      </h2>
+      
+      <div class="w-24"></div> <!-- Spacer for alignment -->
+    </div>
+    
+    <div class="p-6 md:p-8">
+      <form method="POST" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Image Upload Section -->
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-neutral-700">Select Image</label>
+          <div class="flex items-center justify-center w-full">
+            <label for="image-upload" class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-primary-300 rounded-xl cursor-pointer bg-gradient-to-br from-primary-50 to-white hover:from-primary-100 hover:to-primary-50 transition-all duration-300 relative overflow-hidden">
+              <div class="flex flex-col items-center justify-center pt-5 pb-6 z-10" id="upload-content">
+                <i class="fas fa-cloud-upload-alt text-4xl text-primary-400 mb-3"></i>
+                <p class="mb-2 text-sm text-neutral-600">
+                  <span class="font-semibold">Click to upload</span> or drag and drop
+                </p>
+                <p class="text-xs text-neutral-500">PNG, JPG, GIF up to 10MB</p>
+              </div>
+              <input id="image-upload" type="file" name="image" accept="image/*" class="hidden" required />
+              <div id="image-preview" class="hidden absolute inset-0 z-0">
+                <img id="preview-img" src="" alt="Preview" class="w-full h-full object-contain">
+              </div>
+            </label>
+          </div>
+        </div>
+        
+        <!-- Type Selection -->
+        <div class="space-y-2">
+          <label for="type-select" class="block text-sm font-semibold text-neutral-700">Select Color Blindness Type</label>
+          <div class="relative">
+            <select id="type-select" name="type" class="appearance-none w-full bg-white border border-neutral-300 text-neutral-700 py-3 px-4 pr-10 rounded-xl leading-tight focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300">
+              <option value="Protanopia">Protanopia (Red-blind)</option>
+              <option value="Deuteranopia">Deuteranopia (Green-blind)</option>
+              <option value="Tritanopia">Tritanopia (Blue-blind)</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-neutral-700">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="flex gap-2 mt-3">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+              <i class="fas fa-circle text-red-500 mr-1"></i>Red-blind
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              <i class="fas fa-circle text-green-500 mr-1"></i>Green-blind
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              <i class="fas fa-circle text-blue-500 mr-1"></i>Blue-blind
+            </span>
+          </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="pt-4">
+          <button type="submit" class="w-full flex justify-center items-center py-3 px-6 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transform hover:-translate-y-0.5 transition-all duration-300">
+            <i class="fas fa-magic mr-2"></i>
+            Simulate Color Blindness
+          </button>
+        </div>
+      </form>
+      
+      <!-- Results Section -->
+      {% if transformed_image_url %}
+        <div class="mt-8 pt-6 border-t border-neutral-200">
+          <h3 class="text-xl font-bold text-neutral-900 mb-4 flex items-center gap-2">
+            <i class="fas fa-image text-accent-500"></i>
+            Simulation Results
+          </h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <p class="text-sm font-medium text-neutral-700 mb-2">Original Image</p>
+              <div class="aspect-square bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-xl overflow-hidden border border-neutral-200">
+                <img src="{{ original_image_url }}" alt="Original" class="w-full h-full object-cover">
+              </div>
+            </div>
+            
+            <div>
+              <p class="text-sm font-medium text-neutral-700 mb-2">Simulated Image</p>
+              <div class="aspect-square bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-xl overflow-hidden border border-neutral-200">
+                <img src="{{ transformed_image_url }}" alt="Simulated" class="w-full h-full object-cover">
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="{{ transformed_image_url }}" download class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-medium rounded-lg transition-colors duration-300">
+              <i class="fas fa-download mr-2"></i>
+              Download Result
+            </a>
+            <button onclick="location.reload()" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-neutral-200 to-neutral-300 hover:from-neutral-300 hover:to-neutral-400 text-neutral-700 font-medium rounded-lg transition-colors duration-300">
+              <i class="fas fa-redo mr-2"></i>
+              Try Another Image
+            </button>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Handle file input preview
+  const fileInput = document.getElementById('image-upload');
+  const uploadContent = document.getElementById('upload-content');
+  const imagePreview = document.getElementById('image-preview');
+  const previewImg = document.getElementById('preview-img');
+  
+  fileInput.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        imagePreview.classList.remove('hidden');
+        uploadContent.classList.add('hidden');
+      }
+      
+      reader.readAsDataURL(this.files[0]);
+    }
+  });
+  
+  // Reset preview when clicking on the preview area
+  imagePreview.addEventListener('click', function() {
+    fileInput.value = '';
+    imagePreview.classList.add('hidden');
+    uploadContent.classList.remove('hidden');
+  });
+</script>
+{% endblock %}

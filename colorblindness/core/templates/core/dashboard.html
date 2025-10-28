@@ -1,0 +1,79 @@
+{% extends "core/base.html" %}
+
+{% block title %}Dashboard - Vision Accessibility Tools{% endblock %}
+
+{% block content %}
+  <!-- Simulations Section -->
+  <section>
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-neutral-900">Your Uploaded Simulations</h2>
+      <a href="{% url 'simulator' %}" class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300">
+        <i class="fas fa-plus mr-2"></i>
+        <span>New Simulation</span>
+      </a>
+    </div>
+
+    {% if simulations %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for sim in simulations|slice:":8" %}
+          <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-neutral-100">
+            <div class="p-5">
+              <div class="flex justify-between items-start mb-3">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-accent-400 to-accent-500 text-white">
+                  {{ sim.blindness_type }}
+                </span>
+                <span class="text-xs text-neutral-500 bg-neutral-100 px-2 py-1 rounded-md">{{ sim.created_at|date:"M d, Y H:i" }}</span>
+              </div>
+              
+              <div class="space-y-4">
+                <div>
+                  <p class="text-sm font-semibold text-neutral-800 mb-2 flex items-center gap-1">
+                    <i class="fas fa-image text-primary-500"></i>
+                    Original
+                  </p>
+                  <div class="aspect-square bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-lg overflow-hidden border border-neutral-200">
+                    <img src="{{ sim.original_image.url }}" alt="Original" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                  </div>
+                </div>
+                
+                <div>
+                  <p class="text-sm font-semibold text-neutral-800 mb-2 flex items-center gap-1">
+                    <i class="fas fa-adjust text-accent-500"></i>
+                    Transformed
+                  </p>
+                  <div class="aspect-square bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-lg overflow-hidden border border-neutral-200">
+                    <img src="{{ sim.transformed_image.url }}" alt="Transformed" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-4 flex justify-between pt-4 border-t border-neutral-100">
+                <button class="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1 hover:bg-primary-50 px-3 py-1.5 rounded-lg transition-colors duration-300">
+                  <i class="fas fa-download"></i>
+                  <span>Download</span>
+                </button>
+                <button class="text-sm text-red-600 hover:text-red-800 font-medium flex items-center gap-1 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors duration-300">
+                  <i class="fas fa-trash-alt"></i>
+                  <span>Delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+    {% else %}
+      <div class="bg-gradient-to-br from-white to-primary-50 rounded-xl shadow-sm p-12 text-center border border-primary-100">
+        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 mb-4">
+          <i class="fas fa-image text-primary-600 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-neutral-900 mb-2">No simulations yet</h3>
+        <p class="text-neutral-600 mb-6 max-w-md mx-auto">Try uploading an image using the simulator to see how different types of color blindness affect images.</p>
+        <a href="{% url 'simulator' %}" class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300">
+          <i class="fas fa-plus mr-2"></i>
+          <span>Create Your First Simulation</span>
+        </a>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

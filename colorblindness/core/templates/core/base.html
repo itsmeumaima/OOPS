@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Vision Accessibility Tools{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            accent: {
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
+            },
+            neutral: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gradient-to-br from-neutral-50 to-primary-50 min-h-screen">
+  <!-- Navigation Bar -->
+  <nav class="bg-gradient-to-r from-primary-700 to-primary-900 text-white py-4 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+      <div class="flex items-center">
+        <i class="fas fa-eye mr-3 text-accent-300"></i>
+        <h1 class="text-xl font-bold">Vision Accessibility Tools</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="{% url 'color_test' %}" class="hover:text-accent-300 transition-colors duration-300 flex items-center gap-1">
+          <i class="fas fa-vial"></i>
+          <span>Test</span>
+        </a>
+        <a href="{% url 'corrector' %}" class="hover:text-accent-300 transition-colors duration-300 flex items-center gap-1">
+          <i class="fas fa-palette"></i>
+          <span>Corrector</span>
+        </a>
+        <a href="{% url 'simulator' %}" class="hover:text-accent-300 transition-colors duration-300 flex items-center gap-1">
+          <i class="fas fa-eye"></i>
+          <span>Simulator</span>
+        </a>
+        <a href="{% url 'color_detector' %}" class="hover:text-accent-300 transition-colors duration-300 flex items-center gap-1">
+          <i class="fas fa-search"></i>
+          <span>Color Detector</span>
+        </a>
+        {% if user.is_authenticated %}
+          <div class="flex items-center space-x-3">
+            <span class="text-accent-200">Hi, {{ user.username }}</span>
+            <a href="{% url 'logout' %}" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-md transition-colors duration-300 flex items-center gap-1">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        {% else %}
+          <a href="{% url 'login' %}" class="bg-white text-primary-700 hover:bg-primary-100 px-3 py-1 rounded-md transition-colors duration-300 flex items-center gap-1">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-neutral-800 to-neutral-900 mt-12 border-t border-neutral-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <p class="text-center text-sm text-neutral-400">© 2023 Vision Accessibility Tools. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
