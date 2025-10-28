@@ -41,13 +41,20 @@ def signup_view(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = User.objects.create_user(
-                username=form.cleaned_data["username"],
-                email=form.cleaned_data["email"],
-                password=form.cleaned_data["password"],
-            )
-            login(request, user)  # automatically login user after signup
-            return redirect("dashboard")  # like OpenDashboard() in C#
+            password1 = form.cleaned_data["password"]
+            password2 = form.cleaned_data["confirm_password"]
+            if password1 != password2:
+                messages.error(request, "Passwords do not match.")
+            else:
+                user = User.objects.create_user(
+                    username=form.cleaned_data["username"],
+                    email=form.cleaned_data["email"],
+                    password=password1,
+                )
+                login(request, user)
+                return redirect("dashboard")
+        else:
+            print("Form errors ❌:", form.errors)  # 🔍 Add this line
     else:
         form = SignUpForm()
     return render(request, "core/signup.html", {"form": form})
@@ -395,5 +402,5 @@ def color_test_view(request):
         "question": question,
         "current_q": current_q,
         "total": total_questions,
-        "progress": progress,  # ✅ Send to template
+        "progress": progress,  #  Send to template
     })
